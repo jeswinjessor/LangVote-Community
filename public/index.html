@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Learn Firebase CLoud Functions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+  <!-- auth modals -->
+  <div class="auth open">
+    <div class="modal">
+      <h2>Login</h2>
+      <form class="login">
+        <input type="text" name="email" placeholder="Email">
+        <input type="password" name="password" placeholder="Password">
+        <button>Login</button>
+        <p class="error"></p>
+      </form>
+      <div>No account? <a class="switch">Register instead</a></div>
+    </div>
+    <div class="modal">
+      <h2>Register</h2>
+      <form class="register">
+        <input type="text" name="email" placeholder="Email">
+        <input type="password" name="password" placeholder="Password">
+        <button>Register</button>
+        <p class="error"></p>
+      </form>
+      <div>Got an account? <a class="switch">Login instead</a></div>
+    </div>
+  </div>
+
+  <!-- new request modal -->
+  <div class="new-request">
+    <div class="modal">
+      <h2>Request a Tutorial</h2>
+      <form>
+        <input type="text" name="request" placeholder="Request...">
+        <button>Submit Request</button>
+        <p class="error"></p>
+      </form>
+    </div>
+  </div>
+
+  <header>
+    <nav>
+      <a class="add-request">add request</a>
+      <a class="sign-out">sign out</a>
+    </nav>
+  </header>
+
+  <!-- the id="app" is refring to the el of vue in requests.js -->
+  <section class="content" id="app">
+    <h1>Tutorial Requests</h1>
+    <!--
+  the following is a way of getting the vue data in to html
+ <p>{{ requests }}</p>
+-->
+
+    <ul class="request-list">
+      <!-- The following is a vue directive to cycle throuhgh data and 
+        return an <li> tag for every bit of data like a for loop-->
+      <li v-for="request in requests">
+        <span class="text">{{ request.text }}</span>
+        <div>
+          <span class="votes">{{ request.upvotes }}</span>
+          <i class="material-symbols-outlined">arrow_upward</i>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Vuw Js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+
+  <script src="/__/firebase/8.10.1/firebase-app.js"></script>
+  <!-- include only the Firebase features as you need -->
+  <script src="/__/firebase/8.10.1/firebase-auth.js"></script>
+  <script src="/__/firebase/8.10.1/firebase-firestore.js"></script>
+  <script src="/__/firebase/8.10.1/firebase-functions.js"></script>
+  <!-- Load the Firebase SDKs before loading this file -->
+  <script src="/__/firebase/init.js?useEmulator=true"></script>
+
+  <script src="js/app.js"></script>
+  <script src="js/requests.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+
+
+</html>
