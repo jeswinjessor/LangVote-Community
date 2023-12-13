@@ -22,7 +22,6 @@ registerForm.addEventListener('submit', (event) => {
 
     firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((user) => {
-            console.log(user);
             registerForm.reset();
         }).catch(function (error) {
             registerForm.querySelector('.error').textContent = error.message;
@@ -39,7 +38,6 @@ loginForm.addEventListener('submit', (event) => {
 
     firebase.auth().signInWithEmailAndPassword(email, password)
         .then((user) => {
-            console.log(user);
             loginForm.reset();
         }).catch(function (error) {
             loginForm.querySelector('.error').textContent = error.message;

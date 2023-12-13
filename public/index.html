@@ -11,6 +11,10 @@
 
 <body>
 
+  <div class="notification">
+    <p></p>
+  </div>
+
   <!-- auth modals -->
   <div class="auth open">
     <div class="modal">
@@ -69,7 +73,9 @@
         <span class="text">{{ request.text }}</span>
         <div>
           <span class="votes">{{ request.upvotes }}</span>
-          <i class="material-symbols-outlined">arrow_upward</i>
+          <!-- v-on:click directive will enable vue.js to listen to the click event 
+          on the upward arrow -->
+          <a class="material-symbols-outlined" v-on:click="upvoteRequest(request.id)">arrow_upward</a>
         </div>
       </li>
     </ul>

@@ -7,6 +7,19 @@ var app = new Vue({
     data: {
         requests: []
     },
+    methods: {
+        // Since we need to have more than one methods inside the section tag
+        // we need to have a method property to define those function  which will 
+        // be taken care by Vue.js
+        upvoteRequest(id) {
+
+            const upvote = firebase.functions().httpsCallable('upvote');
+            upvote({ id })
+                .catch(error => {
+                    showNotification(error.message);
+                });
+        }
+    },
     // mounted life-cycle hook, 
     // the following function will execute when the vue mount the hook
     mounted() {

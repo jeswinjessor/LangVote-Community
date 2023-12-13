@@ -56,7 +56,7 @@ exports.addRequest = functions.https.onCall((data, context) => {
 });
 
 // upVote Callable fuctions
-exports.upvote = functions.https.onCall((data, context) => {
+exports.upvote = functions.https.onCall(async (data, context) => {
 
     // check the auth state
     if (!context.auth) {
@@ -66,9 +66,61 @@ exports.upvote = functions.https.onCall((data, context) => {
             'only authenticated user can add request'
         );
     }
-
     // get refs for user doc a& request doc
-    const user = admin.firestore().collection('user').doc(context.auth.uid);
+    const user = admin.firestore().collection('users').doc(context.auth.uid);
     // we will be receiving the id of the request through the data parameter 
     const request = admin.firestore().collection('request').doc(data.id);
+    // check if the user already upvoted on the particular tutorial
+    try {
+        const doc = await user.get();
+        // check user hasn't upvoted the request
+        if (doc.data().upvotedOn.includes(data.id)) {
+            throw new functions.https.HttpsError(
+                'failed-precondition',
+                'only upvote a requets once'
+            );
+        }
+        await user.update({
+            // we are getting all the data 
+            upvotedOn: [...doc.data().upvotedOn, data.id]
+        });
+        request.get().then(doc_1 => {
+            let fieldValue = doc_1.data().upvotes || 0;
+            fieldValue = fieldValue * 1;
+            return request.update({
+                upvotes: fieldValue + 1
+            });
+        }).catch(error => {
+            throw new functions.https.HttpsError(
+                'failed-precondition',
+                `${error.message}`
+            );
+        });
+    } catch (error_1) {
+        throw new functions.https.HttpsError(
+            'failed-precondition',
+            `${error_1.message}`
+        );
+    }
 })
+
+// Firebase Trigger for tracking activity
+exports.logActivity = functions.firestore.document('/{collection}/{id}')
+    .onCreate((snapshot, context) => {
+        const collection = context.params.collection;
+        const id = context.params.id;
+
+        const activities = admin.firestore.collection('activities');
+
+        if (collection === 'request') {
+            return activities.add({
+                text: 'a new request has been added'
+            })
+        }
+        if (collection === 'users') {
+            return activities.add({
+                text: 'a new user signed up'
+            })
+        }
+        return null;
+    })
